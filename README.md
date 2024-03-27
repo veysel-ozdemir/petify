@@ -1,59 +1,50 @@
-# petify
+# Petify: Find Lost Pets on the Internet Computer Blockchain - Bootcamp Final Project
 
-Welcome to your new petify project and to the internet computer development community. By default, creating a new project adds this README and some template files to your project directory. You can edit these template files to customize your project and to include your own code to speed up the development cycle.
+This is an 'Announcement' *dApp* (Decentralized Application) with *Motoko* backend built on the *Internet Computer* blockchain, allowing users to create an announcement of their lost pet and see the current list of lost and found pets.
 
-To get started, you might want to explore the project directory structure and the default configuration file. Working with this project in your development environment will not affect any production deployment or identity tokens.
+## Purpose of the Project
+Creating an announcement of the lost pet through the decentralized platform *ICP*, which creates an immutable, confidental, and secure record of the pet owner. On the other hand, the other type of users can access the list of lost pets and might help find them by contacting the pet owners with the contact information mentioned in the announcement.
 
-To learn more before you start working with petify, see the following documentation available online:
+## Data Types
+The *dApp* uses several programmer-designed data types:
+- `Contact`: Represents the contact information of the announcement creator i.e. the lost pet owner. Consists of a full name, address, and phone number.
+- `Pet`: Represents the lost pet. Consists of pet type which describes what type of animal the pet is, kind of the specified pet, sex, color, pet's personal name, and distinct features if it has any.
+- `Time`: Represents the date and time as nanoseconds since 01-01-1970. (Basically, the timestamp in nanoseconds.)
+- `Announcement`: Represents the created announcement of the lost pet. Consists of pet and contact information, lost and found date (as timestamp).
 
-- [Quick Start](https://internetcomputer.org/docs/current/developer-docs/setup/deploy-locally)
-- [SDK Developer Tools](https://internetcomputer.org/docs/current/developer-docs/setup/install)
-- [Motoko Programming Language Guide](https://internetcomputer.org/docs/current/motoko/main/motoko)
-- [Motoko Language Quick Reference](https://internetcomputer.org/docs/current/motoko/main/language-manual)
+## Functions
+The following functions are provided to the users by the *dApp*:
+- `newLost`: It creates a new announcement object and adds to the lost pets list. It is a *update* function.
+- `foundThePet`: It adds the announcement object of the found pet to the found pets list. Afterwards, deletes from the lost pets list. It is a *update* function.
+- `showLostPets`: Displays all the announcements inside the lost pets list. It is a *query* function.
+- `showFoundPets`: Displays all the announcements inside the found pets list. It is a *query* function.
 
-If you want to start working on your project right away, you might want to try the following commands:
+And, these are the private functions used within the *canister* (smart contract):
+- `natHash`: It generates a hash value from a *Nat* (Natural number) value. It's used to create unique and secure identifiers (IDs).
+- `getLostPets`: It returns the iteration result of the list of stored lost pets.
+- `getFoundPets`: It returns the iteration result of the list of stored found pets.
 
+## Run the Project locally
+To test the project locally, just follow the steps below.
+>***CAUTION:*** *The following steps are indicated assuming that the necessary setups to run an ICP project have already been done!*
+
+First, be sure that your terminal directory is same as where the *dfx.json* file is located. This is the project directory.
+Now, split the terminal (two terminal windows with the mentioned directory).
+Run the following command on the first terminal to start the replica:
 ```bash
-cd petify/
-dfx help
-dfx canister --help
+dfx start --clean
 ```
-
-## Running the project locally
-
-If you want to test your project locally, you can use the following commands:
-
+Once the replica is initialized and the dashboard is created (will be specified in the terminal), run the following command on the second terminal to deploy the *canister* to the replica and generate the *CandidUI* (Web Interface):
 ```bash
-# Starts the replica, running in the background
-dfx start --background
-
-# Deploys your canisters to the replica and generates your candid interface
 dfx deploy
 ```
+Once the process completes, there will be a link provided which directs to the *CandidUI*.
+The *dApp* is ready to be tested!
 
-Once the job completes, your application will be available at `http://localhost:4943?canisterId={asset_canister_id}`.
-
-If you have made changes to your backend canister, you can generate a new candid interface with
-
-```bash
-npm run generate
-```
-
-at any time. This is recommended before starting the frontend development server, and will be run automatically any time you run `dfx deploy`.
-
-If you are making frontend changes, you can start a development server with
-
-```bash
-npm start
-```
-
-Which will start a server at `http://localhost:8080`, proxying API requests to the replica at port 4943.
-
-### Note on frontend environment variables
-
-If you are hosting frontend code somewhere without using DFX, you may need to make one of the following adjustments to ensure your project does not fetch the root key in production:
-
-- set`DFX_NETWORK` to `ic` if you are using Webpack
-- use your own preferred method to replace `process.env.DFX_NETWORK` in the autogenerated declarations
-  - Setting `canisters -> {asset_canister_id} -> declarations -> env_override to a string` in `dfx.json` will replace `process.env.DFX_NETWORK` with the string in the autogenerated declarations
-- Write your own `createActor` constructor
+## Visual Examples - CandidUI
+### First Glance
+![](assets/candidui.png)
+### Create New Announcement
+![](assets/new-lost.png)
+### Show The Lists
+![](assets/show-lists.png)

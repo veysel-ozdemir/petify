@@ -9,6 +9,12 @@ import Option "mo:base/Option";
 import Bool "mo:base/Bool";
 
 actor Petify {
+  type Contact = {
+    fullname : Text;
+    address : Text;
+    phone : Nat;
+  };
+
   type Pet = {
     petType : Text;
     kind : Text;
@@ -22,11 +28,12 @@ actor Petify {
 
   type Announcement = {
     pet : Pet;
+    contact : Contact;
     lostDate : Time;
     foundDate : Time;
   };
 
-  func natHash(n : Nat) : Hash.Hash {
+  private func natHash(n : Nat) : Hash.Hash {
     Text.hash(Nat.toText(n));
   };
 
@@ -43,7 +50,8 @@ actor Petify {
   };
 
   public func newLost(
-    pet : Pet
+    pet : Pet,
+    contact : Contact,
   ) : async Text {
     let id = nextId;
     lostPets.put(
@@ -56,6 +64,11 @@ actor Petify {
           color = pet.color;
           distinctFeature = pet.distinctFeature;
           name = pet.name;
+        };
+        contact = {
+          fullname = contact.fullname;
+          address = contact.address;
+          phone = contact.phone;
         };
         lostDate = Time.now();
         foundDate = -1;
@@ -85,6 +98,11 @@ actor Petify {
               distinctFeature = found.pet.distinctFeature;
               name = found.pet.name;
             };
+            contact = {
+              fullname = found.contact.fullname;
+              address = found.contact.address;
+              phone = found.contact.phone;
+            };
             lostDate = found.lostDate;
             foundDate = Time.now();
           },
@@ -92,7 +110,7 @@ actor Petify {
       };
       // remove from lost pets list
       lostPets.delete(id);
-      "Successfully added with ID " # Nat.toText(id) # ".";
+      "Successfully added item with ID " # Nat.toText(id) # ".";
     } else {
       "Please enter the ID.";
     };
@@ -107,6 +125,9 @@ actor Petify {
       output #= "\nSex : " # ann.pet.sex;
       output #= "\nColor : " # ann.pet.color;
       output #= "\nDistinct Feature : " # ann.pet.distinctFeature;
+      output #= "\nContact Full Name : " # ann.contact.fullname;
+      output #= "\nContact Address : " # ann.contact.address;
+      output #= "\nContact Phone : " # Nat.toText(ann.contact.phone);
       output #= "\n---------------------------------";
     };
     output # "\n";
@@ -122,6 +143,9 @@ actor Petify {
       output #= "\nSex : " # ann.pet.sex;
       output #= "\nColor : " # ann.pet.color;
       output #= "\nDistinct Feature : " # ann.pet.distinctFeature;
+      output #= "\nContact Full Name : " # ann.contact.fullname;
+      output #= "\nContact Address : " # ann.contact.address;
+      output #= "\nContact Phone : " # Nat.toText(ann.contact.phone);
       output #= "\n---------------------------------";
     };
     output # "\n";
